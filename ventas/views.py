@@ -16,18 +16,14 @@ from .models import Venta, VentaItem, Trabajador, Turno
 
 @login_required
 def rapida(request):
-    """
-    Vista principal de venta rápida.
-    """
+
     return render(request, "ventas/rapida.html")
 
 
 @require_GET
 @login_required
 def buscar_productos(request):
-    """
-    Busca productos activos y no bloqueados para el buscador en vivo.
-    """
+
     q = request.GET.get("q", "").strip()
 
     productos = Producto.objects.filter(activo=True, bloqueado=False)
@@ -50,9 +46,7 @@ def buscar_productos(request):
 
 
 def _crear_alerta_stock(producto):
-    """
-    Genera una alerta si el stock está bajo el mínimo.
-    """
+
     if producto.stock <= producto.stock_minimo and producto.stock_minimo > 0:
         AlertaStock.objects.get_or_create(
             producto=producto,
@@ -73,7 +67,7 @@ def confirmar_venta(request):
         if not items:
             return HttpResponseBadRequest("No se enviaron ítems en la venta.")
 
-        # TRANSACCIÓN ATÓMICA
+
         with transaction.atomic():
             trabajador = None
             turno = None
